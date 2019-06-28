@@ -1,7 +1,7 @@
 import re
 from django.db import models
 from django.core.validators import RegexValidator
-
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Route(models.Model):
@@ -18,21 +18,14 @@ class Company(models.Model):
     Company_Password = models.CharField(max_length=100)
 
 
-class User(models.Model):
-    username_regex = re.compile(r'^[a-zA-Z0-9_]{6,}$')  # ({LETTER}|_)({LETTER}|{DIGIT}|_)*
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    Name = models.CharField(max_length=200)
-    UserName = models.CharField(max_length=100, validators=[
-        RegexValidator(regex=username_regex, message='Please enter a valid prefix')])
-    Email = models.EmailField(max_length=254)
     Phone = models.PositiveIntegerField()
     Address = models.CharField(max_length=1000)
-    Password = models.CharField(max_length=100)
-    Passport_Number = models.CharField(max_length=100)
-    Payment_Info = models.CharField(max_length=100)
+    Passport_Number = models.CharField(max_length=100,null=True)
+    Payment_Info = models.CharField(max_length=100,null=True)
 
-    def __str__(self):
-        return self.Name
 
 
 class Air_Company(models.Model):
@@ -101,7 +94,7 @@ class Cancellation_Policy(models.Model):
 
 
 class Booking(models.Model):
-    User = models.ForeignKey(User, on_delete=models.CASCADE)
+    User = models.ForeignKey(Profile, on_delete=models.CASCADE)
     Cancellation_Policy = models.ForeignKey(Cancellation_Policy, on_delete=models.CASCADE)
     MoneyToPay = models.DecimalField(max_digits=20, decimal_places=2)
     MoneyToRefund = models.DecimalField(max_digits=20, decimal_places=2)
