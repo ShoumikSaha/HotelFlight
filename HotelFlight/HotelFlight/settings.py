@@ -31,12 +31,14 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'database.apps.DatabaseConfig',
     'search.apps.SearchConfig',
+    'login.apps.LoginConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
