@@ -12,7 +12,11 @@ def homepage(request):
         if form.is_valid():
             print(form.cleaned_data['hoteldest'])
             print(form.cleaned_data['checkin'])
-            print("valid")
+            print(form.cleaned_data['checkout'])
+            print(form.cleaned_data['room'])
+            print(form.cleaned_data['adult'])
+            print(form.cleaned_data['children'])
+#            print("valid")
         else:
             print(form.errors)
     else:

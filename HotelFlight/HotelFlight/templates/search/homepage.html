@@ -175,26 +175,29 @@
                         </div>
                         <div class="search_item">
                             <div>check out</div>
-                            <input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">
+                             {% render_field form.checkout class="check_out search_input" placeholder=form.checkin.label %}
+                           <!-- <input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">-->
+                        </div>
+                         <div class="search_item">
+                            <div>room</div>
+                             {% render_field form.room class="search_input" placeholder=form.room.label %}
                         </div>
                         <div class="search_item">
                             <div>adults</div>
+                            <!--
                             <select name="adults" id="adults_1" class="dropdown_item_select search_input">
                                 <option>01</option>
                                 <option>02</option>
                                 <option>03</option>
-                            </select>
+                            </select> -->
+                            {% render_field form.adult class="search_input" placeholder=form.adult.label %}
                         </div>
                         <div class="search_item">
                             <div>children</div>
-                            <select name="children" id="children_1" class="dropdown_item_select search_input">
-                                <option>0</option>
-                                <option>02</option>
-                                <option>03</option>
-                            </select>
+                             {% render_field form.children class="search_input" placeholder=form.children.label %}
                         </div>
                         <button class="button search_button">search<span></span><span></span><span></span></button>
-                          {% csrf_token %}
+                        {% csrf_token %}
                     </form>
                 </div>
 
