@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'search/plugins/OwlCarousel2-2.2.1/animate.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'search/styles/main_styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'search/styles/responsive.css' %}">
+
 </head>
 <body>
 <div class="super_container">
@@ -49,7 +50,8 @@
                             </ul>
                         </div>
                         <div class="user_box ml-auto">
-                            <div class="user_box_login user_box_link"><a href="#">login</a></div>
+                            <div class="user_box_login user_box_link"><a
+                                    href='/login/?next={{ request.path }}'>login</a></div>
                             <div class="user_box_register user_box_link"><a href="#">register</a></div>
                         </div>
                     </div>
@@ -313,6 +315,7 @@
 <script src="{% static 'search/plugins/OwlCarousel2-2.2.1/owl.carousel.js' %}"></script>
 <script src="{% static 'search/plugins/easing/easing.js' %}"></script>
 <script src="{% static 'search/js/custom.js' %}"></script>
+
 
 </body>
 </html>
