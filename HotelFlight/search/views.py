@@ -28,6 +28,7 @@ def homepage(request):
             cursor.execute('''SELECT H.Hotel_Name,R.RoomType,HR.Price FROM database_hotel H JOIN database_hotel_room HR ON (H.id = HR.Hotel_id)
 JOIN database_room R ON (R.id = HR.Room_id) WHERE H.Hotel_Location=%s AND HR.Checkout_Date <= %s''',[dest,checkindate])
             results = cursor.fetchall()
+
             for row in results:
                 print(row)
         else:
@@ -41,4 +42,4 @@ JOIN database_room R ON (R.id = HR.Room_id) WHERE H.Hotel_Location=%s AND HR.Che
 
 @login_required(login_url='/login/')
 def test(request):
-    return render(request, "search/test.html")
+    return render(request, "search/homepage.html")
