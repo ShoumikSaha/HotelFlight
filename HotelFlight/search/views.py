@@ -26,4 +26,4 @@ def homepage(request):
 
 @login_required(login_url='/login/')
 def test(request):
-    return render(request, "search/homepage.html")
+    return render(request, "search/test.html")
