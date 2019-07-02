@@ -41,4 +41,4 @@ JOIN database_room R ON (R.id = HR.Room_id) WHERE H.Hotel_Location=%s AND HR.Che
 
 @login_required(login_url='/login/')
 def test(request):
-    return render(request, "search/homepage.html")
+    return render(request, "search/test.html")
