@@ -2,89 +2,47 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .forms import SearchHotelForm
 from django.db import connection
-<<<<<<< HEAD
+from django.core.paginator import Paginator
+from collections import namedtuple
 
-
-=======
-from database.models import *
->>>>>>> 34a6d543c3618b86d87657d0a82443c492e20f84
 # Create your views here.
 
 
+def namedtuplefetchall(cursor):
+    desc = cursor.description
+    nt_result = namedtuple('Result', [col[0] for col in desc])
+    return [nt_result(*row) for row in cursor.fetchall()]
+
+
 def homepage(request):
-    if request.method == "POST":
-        form = SearchHotelForm(request.POST)
-        if form.is_valid():
-            dest = form.cleaned_data['hoteldest']
-<<<<<<< HEAD
-=======
-
->>>>>>> 34a6d543c3618b86d87657d0a82443c492e20f84
-            checkindate = form.cleaned_data['checkin']
-            checkoutdate = form.cleaned_data['checkout']
-            room_count = form.cleaned_data['room']
-            adult_count = form.cleaned_data['adult']
-<<<<<<< HEAD
-            print(form.cleaned_data['hoteldest'])
-            print(form.cleaned_data['checkin'])
-            print(form.cleaned_data['checkout'])
-            print(form.cleaned_data['room'])
-            print(form.cleaned_data['adult'])
-            print(form.cleaned_data['children'])
-            #            print("valid")
-            cursor = connection.cursor()
-            cursor.execute('''SELECT H.Hotel_Name,R.RoomType,HR.Price FROM database_hotel H JOIN database_hotel_room HR ON (H.id = HR.Hotel_id)
-            JOIN database_room R ON (R.id = HR.Room_id) WHERE H.Hotel_Location=%s AND HR.Checkout_Date <= %s''',
-                           [dest, checkindate])
-            results = cursor.fetchall()
-=======
-            children_count = form.cleaned_data['children']
-            print(dest)
-            print(checkindate)
-            print(checkoutdate)
-            print(room_count)
-            print(adult_count)
-            print(children_count)
-            print("valid")
-            cursor = connection.cursor()
-            cursor.execute('''SELECT H.Hotel_Name,R.RoomType,HR.Price FROM database_hotel H JOIN database_hotel_room HR ON (H.id = HR.Hotel_id)
-JOIN database_room R ON (R.id = HR.Room_id) WHERE H.Hotel_Location=%s AND HR.Checkout_Date <= %s''',[dest,checkindate])
-            results = cursor.fetchall()
-
->>>>>>> 34a6d543c3618b86d87657d0a82443c492e20f84
-            for row in results:
-                print(row)
-        else:
-            print(form.errors)
-    else:
-        form = SearchHotelForm()
+    form = SearchHotelForm()
     return render(request, "search/homepage.html", {'form': form})
 
-#Dhaka
-#2019-06-30
 
 def searchHotelPage(request):
     dest = request.GET.get('hoteldest', '')
-    checkindate = request.GET.get('checkin', '')
-    checkoutdate = request.GET.get('checkout', '')
-    room_count = request.GET.get('room', '')
-    adult_count = request.GET.get('adult', '')
-    print(dest)
-    print(checkindate)
-    print(checkoutdate)
-    print(room_count)
-    print(adult_count)
+    checkin = request.GET.get('checkin', '')
+    checkout = request.GET.get('checkout', '')
+    roomcount = request.GET.get('room', '')
+    adultcount = request.GET.get('adult', '')
+    print(checkin)
+    dest = '%' + dest + '%'
+    roomcount = int(roomcount)
     cursor = connection.cursor()
-    cursor.execute('''SELECT H.Hotel_Name,H.Hotel_Location,H.Hotel_Country,H.Description,R.RoomType,HR.Price,R.AirConditioner,HR.Complimentary_Breakfast,HR.Wifi FROM database_hotel H JOIN database_hotel_room HR ON (H.id = HR.Hotel_id)
-                JOIN database_room R ON (R.id = HR.Room_id) WHERE H.Hotel_Location=%s AND HR.Checkout_Date <= %s''',
-                   [dest, checkindate])
-    data = cursor.fetchall()
-    for row in data:
-        print(row)
-        print(type(row[8]))
-    return render(request, "search/searchHotel.html", {'data': data})
+    cursor.execute("SELECT H.Hotel_Name,H.Hotel_Location,H.Hotel_Country,H.Description,count(*) as 'Num',"
+                   "min(HR.Price)*%s as 'Price' FROM database_hotel_room HR join database_hotel H on(HR.Hotel_id=H.id)"
+                   "where ((lower(H.Hotel_Name) Like %s OR lower(H.Hotel_Location) Like %s OR "
+                   "lower(H.Hotel_Country) Like %s) and HR.Checkout_Date <= %s)"
+                   "GROUP BY H.Hotel_Name HAVING Num >= %s", [roomcount,dest, dest, dest, checkin, roomcount])
+    data = namedtuplefetchall(cursor)
+    paginator = Paginator(data, 5)
+    page = request.GET.get('page')
+    hotels = paginator.get_page(page)
+    for hotel in hotels:
+        print(hotel.Description)
+    return render(request, "search/searchHotel.html", {'hotels': hotels})
 
 
-@login_required(login_url='/login/')
+# @login_required(login_url='/login/')
 def test(request):
-    return render(request, "search/homepage.html")
+    return render(request, "search/test.html")

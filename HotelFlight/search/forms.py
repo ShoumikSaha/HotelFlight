@@ -13,8 +13,8 @@ CHOICES = (
 
 class SearchHotelForm(forms.Form):
     hoteldest = forms.CharField(label='Hotel or destination place', max_length=100)
-    checkin = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-    checkout = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+    checkin = forms.DateField()
+    checkout = forms.DateField()
     room = forms.CharField(widget=forms.Select(choices=CHOICES))
     adult = forms.CharField(widget=forms.Select(choices=CHOICES))
     children = forms.CharField(widget=forms.Select(choices=CHOICES))
