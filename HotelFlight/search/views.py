@@ -2,8 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .forms import SearchHotelForm
 from django.db import connection
+<<<<<<< HEAD
 
 
+=======
+from database.models import *
+>>>>>>> 34a6d543c3618b86d87657d0a82443c492e20f84
 # Create your views here.
 
 
@@ -12,10 +16,15 @@ def homepage(request):
         form = SearchHotelForm(request.POST)
         if form.is_valid():
             dest = form.cleaned_data['hoteldest']
+<<<<<<< HEAD
+=======
+
+>>>>>>> 34a6d543c3618b86d87657d0a82443c492e20f84
             checkindate = form.cleaned_data['checkin']
             checkoutdate = form.cleaned_data['checkout']
             room_count = form.cleaned_data['room']
             adult_count = form.cleaned_data['adult']
+<<<<<<< HEAD
             print(form.cleaned_data['hoteldest'])
             print(form.cleaned_data['checkin'])
             print(form.cleaned_data['checkout'])
@@ -28,6 +37,21 @@ def homepage(request):
             JOIN database_room R ON (R.id = HR.Room_id) WHERE H.Hotel_Location=%s AND HR.Checkout_Date <= %s''',
                            [dest, checkindate])
             results = cursor.fetchall()
+=======
+            children_count = form.cleaned_data['children']
+            print(dest)
+            print(checkindate)
+            print(checkoutdate)
+            print(room_count)
+            print(adult_count)
+            print(children_count)
+            print("valid")
+            cursor = connection.cursor()
+            cursor.execute('''SELECT H.Hotel_Name,R.RoomType,HR.Price FROM database_hotel H JOIN database_hotel_room HR ON (H.id = HR.Hotel_id)
+JOIN database_room R ON (R.id = HR.Room_id) WHERE H.Hotel_Location=%s AND HR.Checkout_Date <= %s''',[dest,checkindate])
+            results = cursor.fetchall()
+
+>>>>>>> 34a6d543c3618b86d87657d0a82443c492e20f84
             for row in results:
                 print(row)
         else:
@@ -36,6 +60,8 @@ def homepage(request):
         form = SearchHotelForm()
     return render(request, "search/homepage.html", {'form': form})
 
+#Dhaka
+#2019-06-30
 
 def searchHotelPage(request):
     dest = request.GET.get('hoteldest', '')
@@ -61,4 +87,4 @@ def searchHotelPage(request):
 
 @login_required(login_url='/login/')
 def test(request):
-    return render(request, "search/test.html")
+    return render(request, "search/homepage.html")
