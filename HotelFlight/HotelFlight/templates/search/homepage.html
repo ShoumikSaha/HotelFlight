@@ -160,7 +160,7 @@
                 <!-- Search Panel -->
 
                 <div class="search_panel active">
-                    <form action="{% url 'searchHotelPage' %} " id="search_form_1" method="get"
+                    <form action="{% url 'searchHotelPage' %}" id="search_form_1" method="get"
                           class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 
                         <div class="search_item">
@@ -168,33 +168,27 @@
                             {% render_field form.hoteldest class="destination search_input" placeholder=form.hoteldest.label %}
                             <!-- <input type="text" class="destination search_input" required="required"> -->
                         </div>
-                        <div class="search_item">
+                        <div class="search_item" style="margin-top: 12px">
                             <div>check in</div>
                             {% render_field form.checkin class="check_in search_input" placeholder=form.checkin.label %}
                             <!-- <input type="text" class="check_in search_input" placeholder="YYYY-MM-DD"> -->
                         </div>
-                        <div class="search_item">
+                        <div class="search_item" style="margin-top: 12px">
                             <div>check out</div>
-                             {% render_field form.checkout class="check_out search_input" placeholder=form.checkin.label %}
-                           <!-- <input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">-->
+                            {% render_field form.checkout class="check_out search_input" placeholder=form.checkin.label %}
+                            <!-- <input type="text" class="check_out search_input" placeholder="YYYY-MM-DD">-->
                         </div>
-                         <div class="search_item">
+                        <div class="search_item">
                             <div>room</div>
-                             {% render_field form.room class="search_input" placeholder=form.room.label %}
+                            {% render_field form.room class="search_input" placeholder=form.room.label %}
                         </div>
                         <div class="search_item">
                             <div>adults</div>
-                            <!--
-                            <select name="adults" id="adults_1" class="dropdown_item_select search_input">
-                                <option>01</option>
-                                <option>02</option>
-                                <option>03</option>
-                            </select> -->
                             {% render_field form.adult class="search_input" placeholder=form.adult.label %}
                         </div>
                         <div class="search_item">
                             <div>children</div>
-                             {% render_field form.children class="search_input" placeholder=form.children.label %}
+                            {% render_field form.children class="search_input" placeholder=form.children.label %}
                         </div>
                         <button class="button search_button">search<span></span><span></span><span></span></button>
                         {% csrf_token %}
@@ -243,3 +237,25 @@
 </div>
 
 {% endblock content %}
+
+
+{% block jscript %}
+<script>
+    var today = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
+    var tommorrow = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + (new Date().getDate()+1)
+    $('#id_checkin').datepicker({
+        uiLibrary: 'bootstrap4',
+        value: today,
+        minDate: today,
+        format: 'yyyy-mm-dd',
+        size: 'small'
+    });
+    $('#id_checkout').datepicker({
+        uiLibrary: 'bootstrap4',
+        value: tommorrow,
+        minDate: tommorrow,
+        format: 'yyyy-mm-dd',
+        size: 'small'
+    });
+</script>
+{% endblock jscript %}
