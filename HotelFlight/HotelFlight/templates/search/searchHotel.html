@@ -2,7 +2,7 @@
 
 {% load staticfiles %}
 {% load url_replace %}
-
+{% load url_get %}
 {% load widget_tweaks %}
 
 
@@ -14,6 +14,9 @@
       type="text/css">
 <link rel="stylesheet" type="text/css" href="{% static 'search/styles/search.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'search/styles/responsive.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'gijgo/js/gijgo.min.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 {% endblock css %}
 
 {% block content %}
@@ -46,43 +49,33 @@
 
 
                                     <div class="search_panel active">
-                                        <form action="{% url 'searchHotelPage' %} " id="search_form_1"
+                                        <form action="{% url 'searchHotelPage' %} " id="search_form_1" method="get"
                                               class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
                                             <div class="search_item">
                                                 <div>destination</div>
-                                                <input type="text" class="destination search_input" required="required">
+                                                {% url_get request 'hoteldest' as hoteldest %}
+                                                {% render_field form.hoteldest class="destination search_input" placeholder=form.hoteldest.label value=hoteldest %}
                                             </div>
                                             <div class="search_item">
                                                 <div>check in</div>
-                                                <input type="text" class="check_in search_input"
-                                                       placeholder="YYYY-MM-DD">
+                                                {% render_field form.checkin class="check_in search_input" placeholder=form.checkin.label%}
                                             </div>
                                             <div class="search_item">
                                                 <div>check out</div>
-                                                <input type="text" class="check_out search_input"
-                                                       placeholder="YYYY-MM-DD">
+                                                {% render_field form.checkout class="check_out search_input" placeholder=form.checkout.label%}
+                                            </div>
+                                            <div class="search_item">
+                                                <div>room</div>
+                                                {% render_field form.room class="search_input room" placeholder=form.room.label %}
                                             </div>
                                             <div class="search_item">
                                                 <div>adults</div>
-                                                <select name="adults" id="adults_1"
-                                                        class="dropdown_item_select search_input">
-                                                    <option>01</option>
-                                                    <option>02</option>
-                                                    <option>03</option>
-                                                </select>
-                                            </div>
-                                            <div class="search_item">
-                                                <div>children</div>
-                                                <select name="children" id="children_1"
-                                                        class="dropdown_item_select search_input">
-                                                    <option>0</option>
-                                                    <option>02</option>
-                                                    <option>03</option>
-                                                </select>
+                                                {% render_field form.adult class="search_input" placeholder=form.adult.label %}
                                             </div>
                                             <button class="button search_button">
                                                 search<span></span><span></span><span></span>
                                             </button>
+                                            {% csrf_token %}
                                         </form>
                                     </div>
 
@@ -203,66 +196,71 @@
                         <div class="offers_grid">
 
                             {% for hotel in hotels %}
-                                <!-- Offers Item -->
-                                <div class="offers_item rating_4">
+                            <!-- Offers Item -->
+                            <div class="offers_item rating_4">
 
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <div class="offers_image_container">
-                                                <div class="offers_image_background">
-                                                    <img src="{% static 'search/images/offer_1.jpg' %}" alt="" height="300"
-                                                         width="300">
-                                                </div>
-                                                <div class="offer_name"><a href="single_listing.html">{{ hotel.Hotel_Name }}</a>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="offers_image_container">
+                                            <div class="offers_image_background">
+                                                {% with hotel.ID|stringformat:"i" as ID %}
+                                                <img src="{% static 'media/user_'|add:ID|add:'/main/0.jpg' %}" alt=""
+                                                     height="300"
+                                                     width="300">
+                                                {% endwith %}
+                                                <!--<img src="{% static 'search/images/offer_1.jpg' %}" alt="" height="300"
+                                                     width="300">-->
+                                            </div>
+                                            <div class="offer_name"><a href="single_listing.html">{{ hotel.Hotel_Name }}</a>
                                             </div>
                                         </div>
-
-                                        <div class="col-lg-8 no-padding no-margin no-gutters">
-                                            <div class="offers_content">
-                                                <div class="offers_price">{{ hotel.Price }}‎৳<span>per night</span></div>
-                                                <div class="rating_r rating_r_4 offers_rating" data-rating="4">
-                                                    <i></i>
-                                                    <i></i>
-                                                    <i></i>
-                                                    <i></i>
-                                                    <i></i>
-                                                </div>
-                                                <p class="offers_text">
-                                                    {{ hotel.Hotel_Location }}, {{ hotel.Hotel_Country }}
-                                                </p>
-                                                <p class="offers_text">
-                                                    {{ hotel.Description }}
-                                                </p>
-                                                <div class="offers_icons">
-                                                    <ul class="offers_icons_list">
-                                                        <li class="offers_icons_item"><img src="images/post.png" alt="">
-                                                        </li>
-                                                        <li class="offers_icons_item"><img src="images/compass.png"
-                                                                                           alt="">
-                                                        </li>
-                                                        <li class="offers_icons_item"><img src="images/bicycle.png"
-                                                                                           alt="">
-                                                        </li>
-                                                        <li class="offers_icons_item"><img src="images/sailboat.png"
-                                                                                           alt="">
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="button book_button"><a
-                                                        href="#">book<span></span><span></span><span></span></a></div>
-                                                <div class="offer_reviews">
-                                                    <div class="offer_reviews_content">
-                                                        <div class="offer_reviews_title">very good</div>
-                                                        <div class="offer_reviews_subtitle">100 reviews</div>
-                                                    </div>
-                                                    <div class="offer_reviews_rating text-center">8.1</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-1"></div>
                                     </div>
+
+                                    <div class="col-lg-8 no-padding no-margin no-gutters">
+                                        <div class="offers_content">
+                                            <div class="offers_price">{{ hotel.Price }}‎৳<span>per night</span></div>
+                                            <div class="rating_r rating_r_4 offers_rating" data-rating="4">
+                                                <i></i>
+                                                <i></i>
+                                                <i></i>
+                                                <i></i>
+                                                <i></i>
+                                            </div>
+                                            <p class="offers_text">
+                                                {{ hotel.Hotel_Location }}, {{ hotel.Hotel_Country }}
+                                            </p>
+                                            <p class="offers_text">
+                                                {{ hotel.Description }}
+                                            </p>
+                                            <div class="offers_icons">
+                                                <ul class="offers_icons_list">
+                                                    <li class="offers_icons_item"><img src="images/post.png" alt="">
+                                                    </li>
+                                                    <li class="offers_icons_item"><img src="images/compass.png"
+                                                                                       alt="">
+                                                    </li>
+                                                    <li class="offers_icons_item"><img src="images/bicycle.png"
+                                                                                       alt="">
+                                                    </li>
+                                                    <li class="offers_icons_item"><img src="images/sailboat.png"
+                                                                                       alt="">
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="button book_button"><a
+                                                    href="#">book<span></span><span></span><span></span></a></div>
+                                            <div class="offer_reviews">
+                                                <div class="offer_reviews_content">
+                                                    <div class="offer_reviews_title">very good</div>
+                                                    <div class="offer_reviews_subtitle">100 reviews</div>
+                                                </div>
+                                                <div class="offer_reviews_rating text-center">8.1</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1"></div>
                                 </div>
+                            </div>
                             {% endfor %}
 
 
@@ -297,3 +295,81 @@
 
 
 {% endblock content %}
+
+
+{% block jscript %}
+<script>
+
+        function getAllUrlParams(url) {
+      // get query string from url (optional) or window
+      var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+      // we'll store the parameters here
+      var obj = {};
+      // if query string exists
+      if (queryString) {
+        // stuff after # is not part of query string, so get rid of it
+        queryString = queryString.split('#')[0];
+        // split our query string into its component parts
+        var arr = queryString.split('&');
+        for (var i = 0; i < arr.length; i++) {
+          // separate the keys and the values
+          var a = arr[i].split('=');
+          // set parameter name and value (use 'true' if empty)
+          var paramName = a[0];
+          var paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+          // (optional) keep case consistent
+          paramName = paramName.toLowerCase();
+          if (typeof paramValue === 'string') paramValue = paramValue.toLowerCase();
+          // if the paramName ends with square brackets, e.g. colors[] or colors[2]
+          if (paramName.match(/\[(\d+)?\]$/)) {
+            // create key if it doesn't exist
+            var key = paramName.replace(/\[(\d+)?\]/, '');
+            if (!obj[key]) obj[key] = [];
+            // if it's an indexed array e.g. colors[2]
+            if (paramName.match(/\[\d+\]$/)) {
+              // get the index value and add the entry at the appropriate position
+              var index = /\[(\d+)\]/.exec(paramName)[1];
+              obj[key][index] = paramValue;
+            } else {
+              // otherwise add the value to the end of the array
+              obj[key].push(paramValue);
+            }
+          } else {
+            // we're dealing with a string
+            if (!obj[paramName]) {
+              // if it doesn't exist, create property
+              obj[paramName] = paramValue;
+            } else if (obj[paramName] && typeof obj[paramName] === 'string'){
+              // if property does exist and it's a string, convert it to an array
+              obj[paramName] = [obj[paramName]];
+              obj[paramName].push(paramValue);
+            } else {
+              // otherwise add the property
+              obj[paramName].push(paramValue);
+            }
+          }
+        }
+      }
+
+      return obj;
+    }
+
+    var today = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
+    var tommorrow = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + (new Date().getDate() + 1)
+    $('#id_checkin').datepicker({
+        uiLibrary: 'bootstrap4',
+        value: getAllUrlParams().checkin ,
+        minDate: today,
+        format: 'yyyy-mm-dd',
+        size: 'small'
+    });
+    $('#id_checkout').datepicker({
+        uiLibrary: 'bootstrap4',
+        value: getAllUrlParams().checkout,
+        minDate: tommorrow,
+        format: 'yyyy-mm-dd',
+        size: 'small'
+    });
+    
+</script>
+{% endblock jscript %}
